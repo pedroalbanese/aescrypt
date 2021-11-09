@@ -8,13 +8,13 @@
 <pre>Usage of aescrypt:
   -d    Decrypt instead Encrypt.
   -f string
-        Target file.
+        Target file. ('-' for STDIN)
   -i int
         Iterations. (for PBKDF2) (default 1024)
   -k string
         256-bit key to Encrypt/Decrypt.
   -p string
-        PBKDF2.
+        Password-based key derivation function2.
   -r    Generate random 256-bit cryptographic key.
   -s string
         Salt. (for PBKDF2)</pre>
