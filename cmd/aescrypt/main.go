@@ -20,7 +20,7 @@ var (
 	file   = flag.String("f", "", "Target file.")
 	iter   = flag.Int("i", 1024, "Iterations. (for PBKDF2)")
 	key    = flag.String("k", "", "256-bit key to Encrypt/Decrypt.")
-	pbkdf  = flag.String("p", "", "PBKDF2.")
+	pbkdf  = flag.String("p", "", "Password-based key derivation function2.")
 	random = flag.Bool("r", false, "Generate random 256-bit cryptographic key.")
 	salt   = flag.String("s", "", "Salt. (for PBKDF2)")
 )
