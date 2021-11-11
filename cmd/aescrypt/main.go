@@ -30,7 +30,7 @@ func main() {
 
 	if len(os.Args) < 2 {
 		fmt.Println("AES-GCM Encryption Tool - ALBANESE Lab (c) 2020-2021")
-		fmt.Println("Rijndael256 block cipher in GCM (Counter/Galois Mode).\n")
+		fmt.Println("Rijndael256 block cipher in GCM (Galois/Counter Mode).\n")
 		fmt.Println("Usage of", os.Args[0]+":")
 		flag.PrintDefaults()
 		os.Exit(1)
