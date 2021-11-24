@@ -5,7 +5,7 @@
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/pedroalbanese/aescrypt)](https://golang.org)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/pedroalbanese/aescrypt)](https://github.com/pedroalbanese/aescrypt/releases)  
 
-Rijndael256 with Galois/Counter Mode (AES-GCM) provides both authenticated encryption (confidentiality and authentication) and the ability to check the integrity and authentication of additional authenticated data (AAD) that is sent in the clear. AES-GCM is specified in NIST Special Publication 800-38D [SP800-38D].
+Rijndael256 with Galois/Counter Mode (AES-GCM) provides both authenticated encryption (confidentiality and authentication) and the ability to check the integrity and authentication of additional authenticated data (AAD) that is sent in the clear. AES-GCM is specified in NIST Special Publication 800-38D [SP800-38D](https://csrc.nist.gov/publications/detail/sp/800-38d/final).
 ### Command-line AES-GCM Encryption Tool
 <pre>Usage of aescrypt:
   -d    Decrypt instead Encrypt.
