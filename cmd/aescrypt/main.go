@@ -22,11 +22,11 @@ import (
 )
 
 var (
-	cph    = flag.String("c", "aes", "Cipher: AES, RC4, Twofish or Serpent.")
+	cph    = flag.String("c", "aes", "Cipher: AES, RC6, Twofish or Serpent.")
 	dec    = flag.Bool("d", false, "Decrypt instead Encrypt.")
 	file   = flag.String("f", "", "Target file. ('-' for STDIN)")
 	iter   = flag.Int("i", 1024, "Iterations. (for PBKDF2)")
-	key    = flag.String("k", "", "256-bit key to Encrypt/Decrypt.")
+	key    = flag.String("k", "", "Symmetric key to Encrypt/Decrypt.")
 	length = flag.Int("b", 256, "Key length: 128, 192 or 256.")
 	mac    = flag.Bool("m", false, "Cipher-based message authentication code.")
 	pbkdf  = flag.String("p", "", "Password-based key derivation function 2.")
