@@ -11,7 +11,7 @@ Rijndael, Serpent, RC6 and Twofish with Galois/Counter Mode (AES-GCM) provides b
   -b int
         Key length: 128, 192 or 256. (default 256)
   -c string
-        Cipher: AES, RC4, Twofish or Serpent. (default "aes")
+        Cipher: AES, RC6, Twofish or Serpent. (default "aes")
   -d    Decrypt instead Encrypt.
   -f string
         Target file. ('-' for STDIN)
