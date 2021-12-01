@@ -8,16 +8,21 @@
 Rijndael256 with Galois/Counter Mode (AES-GCM) provides both authenticated encryption (confidentiality and authentication) and the ability to check the integrity and authentication of additional authenticated data (AAD) that is sent in the clear. AES-GCM is specified in NIST Special Publication 800-38D ([SP800-38D](https://csrc.nist.gov/publications/detail/sp/800-38d/final)).
 ### Command-line AES-GCM Encryption Tool
 <pre>Usage of aescrypt:
+  -b int
+        Key length: 128, 192 or 256. (default 256)
+  -c string
+        Cipher: AES, RC4, Twofish or Serpent. (default "aes")
   -d    Decrypt instead Encrypt.
   -f string
         Target file. ('-' for STDIN)
   -i int
         Iterations. (for PBKDF2) (default 1024)
   -k string
-        256-bit key to Encrypt/Decrypt.
+        Symmetric key to Encrypt/Decrypt.
+  -m    Cipher-based message authentication code.
   -p string
-        Password-based key derivation function2.
-  -r    Generate random 256-bit cryptographic key.
+        Password-based key derivation function 2.
+  -r    Generate random cryptographic key with given bit-length.
   -s string
         Salt. (for PBKDF2)</pre>
 
