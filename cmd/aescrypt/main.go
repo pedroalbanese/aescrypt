@@ -10,18 +10,27 @@ import (
 	"flag"
 	"fmt"
 	"golang.org/x/crypto/pbkdf2"
+	"golang.org/x/crypto/twofish"
 	"io"
 	"log"
 	"os"
+	"strings"
+
+	"github.com/aead/cmac"
+	"github.com/pedroalbanese/crypto/serpent"
+	"github.com/pedroalbanese/golang-rc6"
 )
 
 var (
+	cph    = flag.String("c", "aes", "Cipher: AES, RC4, Twofish or Serpent.")
 	dec    = flag.Bool("d", false, "Decrypt instead Encrypt.")
-	file   = flag.String("f", "", "Target file.")
+	file   = flag.String("f", "", "Target file. ('-' for STDIN)")
 	iter   = flag.Int("i", 1024, "Iterations. (for PBKDF2)")
 	key    = flag.String("k", "", "256-bit key to Encrypt/Decrypt.")
-	pbkdf  = flag.String("p", "", "Password-based key derivation function2.")
-	random = flag.Bool("r", false, "Generate random 256-bit cryptographic key.")
+	length = flag.Int("b", 256, "Key length: 128, 192 or 256.")
+	mac    = flag.Bool("m", false, "Cipher-based message authentication code.")
+	pbkdf  = flag.String("p", "", "Password-based key derivation function 2.")
+	random = flag.Bool("r", false, "Generate random cryptographic key with given bit-length.")
 	salt   = flag.String("s", "", "Salt. (for PBKDF2)")
 )
 
@@ -30,7 +39,7 @@ func main() {
 
 	if len(os.Args) < 2 {
 		fmt.Println("AES-GCM Encryption Tool - ALBANESE Lab (c) 2020-2021")
-		fmt.Println("Rijndael256 block cipher in GCM (Galois/Counter Mode).\n")
+		fmt.Println("Advanced Encryption Standard in Galois/Counter Mode\n")
 		fmt.Println("Usage of", os.Args[0]+":")
 		flag.PrintDefaults()
 		os.Exit(1)
@@ -39,7 +48,7 @@ func main() {
 	if *random == true {
 		var key []byte
 		var err error
-		key = make([]byte, 32)
+		key = make([]byte, *length/8)
 		_, err = io.ReadFull(rand.Reader, key)
 		if err != nil {
 			log.Fatal(err)
@@ -50,62 +59,106 @@ func main() {
 
 	var keyHex string
 	var prvRaw []byte
-	if *pbkdf != "" {
-		prvRaw = pbkdf2.Key([]byte(*pbkdf), []byte(*salt), *iter, 32, sha256.New)
-		keyHex = hex.EncodeToString(prvRaw)
-	} else {
-		keyHex = *key
-	}
-	var key []byte
-	var err error
-	if keyHex == "" {
-		key = make([]byte, 32)
-		_, err = io.ReadFull(rand.Reader, key)
+
+	if *mac {
+		if *pbkdf != "" {
+			prvRaw = pbkdf2.Key([]byte(*pbkdf), []byte(*salt), *iter, 16, sha256.New)
+			keyHex = hex.EncodeToString(prvRaw)
+		} else {
+			keyHex = *key
+		}
+		var err error
+		var ciph cipher.Block
+		if strings.ToUpper(*cph) == "AES" {
+			ciph, err = aes.NewCipher([]byte(keyHex))
+		} else if strings.ToUpper(*cph) == "SERPENT" {
+			ciph, err = serpent.NewCipher([]byte(keyHex))
+		} else if strings.ToUpper(*cph) == "TWOFISH" {
+			ciph, err = twofish.NewCipher([]byte(keyHex))
+		} else if strings.ToUpper(*cph) == "RC6" {
+			ciph = rc6.NewCipher([]byte(keyHex))
+		}
+
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintln(os.Stderr, "Key=", hex.EncodeToString(key))
-	} else {
-		key, err = hex.DecodeString(keyHex)
-		if err != nil {
-			log.Fatal(err)
+		h, _ := cmac.New(ciph)
+		var data io.Reader
+		if *file == "-" {
+			data = os.Stdin
+		} else {
+			data, _ = os.Open(*file)
 		}
-		if len(key) != 32 {
-			log.Fatal(err)
-		}
-	}
-
-	buf := bytes.NewBuffer(nil)
-	var data io.Reader
-	if *file == "-" {
-		data = os.Stdin
-	} else {
-		data, _ = os.Open(*file)
-	}
-	io.Copy(buf, data)
-	msg := buf.Bytes()
-
-	c, _ := aes.NewCipher(key)
-	aead, _ := cipher.NewGCM(c)
-
-	if *dec == false {
-		nonce := make([]byte, aead.NonceSize(), aead.NonceSize()+len(msg)+aead.Overhead())
-
-		out := aead.Seal(nonce, nonce, msg, nil)
-		fmt.Printf("%s", out)
-
+		io.Copy(h, data)
+		fmt.Println(hex.EncodeToString(h.Sum(nil)))
 		os.Exit(0)
-	}
-
-	if *dec == true {
-		nonce, msg := msg[:aead.NonceSize()], msg[aead.NonceSize():]
-
-		out, err := aead.Open(nil, nonce, msg, nil)
-		if err != nil {
-			log.Fatal(err)
+	} else {
+		if *pbkdf != "" {
+			prvRaw = pbkdf2.Key([]byte(*pbkdf), []byte(*salt), *iter, *length/8, sha256.New)
+			keyHex = hex.EncodeToString(prvRaw)
+		} else {
+			keyHex = *key
 		}
-		fmt.Printf("%s", out)
+		var key []byte
+		var err error
+		if keyHex == "" {
+			key = make([]byte, *length/8)
+			_, err = io.ReadFull(rand.Reader, key)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Fprintln(os.Stderr, "Key=", hex.EncodeToString(key))
+		} else {
+			key, err = hex.DecodeString(keyHex)
+			if err != nil {
+				log.Fatal(err)
+			}
+			if len(key) != 32 && len(key) != 24 && len(key) != 16 {
+				log.Fatal(err)
+			}
+		}
 
-		os.Exit(0)
+		buf := bytes.NewBuffer(nil)
+		var data io.Reader
+		if *file == "-" {
+			data = os.Stdin
+		} else {
+			data, _ = os.Open(*file)
+		}
+		io.Copy(buf, data)
+		msg := buf.Bytes()
+
+		var c cipher.Block
+		if strings.ToUpper(*cph) == "AES" {
+			c, err = aes.NewCipher(key)
+		} else if strings.ToUpper(*cph) == "SERPENT" {
+			c, err = serpent.NewCipher(key)
+		} else if strings.ToUpper(*cph) == "TWOFISH" {
+			c, err = twofish.NewCipher(key)
+		} else if strings.ToUpper(*cph) == "RC6" {
+			c = rc6.NewCipher(key)
+		}
+		aead, _ := cipher.NewGCM(c)
+
+		if *dec == false {
+			nonce := make([]byte, aead.NonceSize(), aead.NonceSize()+len(msg)+aead.Overhead())
+
+			out := aead.Seal(nonce, nonce, msg, nil)
+			fmt.Printf("%s", out)
+
+			os.Exit(0)
+		}
+
+		if *dec == true {
+			nonce, msg := msg[:aead.NonceSize()], msg[aead.NonceSize():]
+
+			out, err := aead.Open(nil, nonce, msg, nil)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("%s", out)
+
+			os.Exit(0)
+		}
 	}
 }
