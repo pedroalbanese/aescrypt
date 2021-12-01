@@ -30,4 +30,4 @@ Rijndael, Serpent, RC6 and Twofish with Galois/Counter Mode (AES-GCM) provides b
 
 This project is licensed under the ISC License.
 
-##### Military Grade Reliability. Copyright (c) 2020-2021 ALBANESE Research Lab.
+##### Commercial-Grade Reliability. Copyright (c) 2020-2021 ALBANESE Research Lab.
