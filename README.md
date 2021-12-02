@@ -27,6 +27,12 @@ aescrypt [-d] [-b N] -p "pass" [-i N] [-s "salt"] -f &lt;file.ext&gt;
   -s string
         Salt. (for PBKDF2)</pre>
 
+### Example of encryption/decryption:
+```sh
+./leacrypt -k $256bitkey -f plaintext.ext > ciphertext.ext
+./leacrypt -d -k $256bitkey -f ciphertext.ext > plaintext.ext
+```
+
 ## License
 
 This project is licensed under the ISC License.
