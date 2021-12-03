@@ -29,7 +29,7 @@ aescrypt [-d] [-b N] -p "pass" [-i N] [-s "salt"] -f &lt;file.ext&gt;
 
 ### Example of encryption/decryption:
 ```sh
-./aescrypt -k $256bitkey -f plaintext.ext > ciphertext.ext
+./aescrypt -k "" -f plaintext.ext > ciphertext.ext
 ./aescrypt -d -k $256bitkey -f ciphertext.ext > plaintext.ext
 ```
 
