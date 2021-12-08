@@ -1,5 +1,6 @@
 # AESCrypt
 [![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](https://github.com/pedroalbanese/aescrypt/blob/master/LICENSE.md) 
+[![GitHub downloads](https://img.shields.io/github/downloads/pedroalbanese/aescrypt/total.svg?logo=github&logoColor=white)](https://github.com/pedroalbanese/aescrypt/releases)
 [![GoDoc](https://godoc.org/github.com/pedroalbanese/aescrypt?status.png)](http://godoc.org/github.com/pedroalbanese/aescrypt)
 [![Go Report Card](https://goreportcard.com/badge/github.com/pedroalbanese/aescrypt)](https://goreportcard.com/report/github.com/pedroalbanese/aescrypt)
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/pedroalbanese/aescrypt)](https://golang.org)
