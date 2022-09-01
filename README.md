@@ -10,23 +10,25 @@ Rijndael, Serpent, RC6 and Twofish with Galois/Counter Mode (AES-GCM) provides b
 ### Command-line AES-GCM Encryption Tool
 <pre>Usage of aescrypt:
 aescrypt [-d] [-b N] -p "pass" [-i N] [-s "salt"] -f &lt;file.ext&gt;
-  -b int
-        Key length: 128, 192 or 256. (default 256)
-  -c string
-        Cipher: AES, RC6, Twofish or Serpent. (default "aes")
-  -d    Decrypt instead Encrypt.
-  -f string
-        Target file. ('-' for STDIN)
-  -i int
-        Iterations. (for PBKDF2) (default 1024)
-  -k string
-        Symmetric key to Encrypt/Decrypt.
-  -m    Cipher-based message authentication code.
-  -p string
-        Password-based key derivation function 2.
-  -r    Generate random cryptographic key with given bit-length.
-  -s string
-        Salt. (for PBKDF2)</pre>
+ -a string
+       Additional authenticated data.
+ -b int
+       Key length: 128, 192 or 256. (default 256)
+ -c string
+       Cipher: AES, RC6, Twofish or Serpent. (default "aes")
+ -d    Decrypt instead Encrypt.
+ -f string
+       Target file. ('-' for STDIN)
+ -i int
+       Iterations. (for PBKDF2) (default 1024)
+ -k string
+       Symmetric key to Encrypt/Decrypt.
+ -m    Cipher-based message authentication code.
+ -p string
+       Password-based key derivation function 2.
+ -r    Generate random cryptographic key with given bit-length.
+ -s string
+       Salt. (for PBKDF2)</pre>
 
 ### Example of encryption/decryption:
 ```sh
