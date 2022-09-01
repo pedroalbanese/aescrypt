@@ -149,7 +149,7 @@ func main() {
 				log.Fatal(err)
 			}
 
-			out := aead.Seal(nonce, nonce, msg, nil)
+			out := aead.Seal(nonce, nonce, msg, []byte(*info))
 			fmt.Printf("%s", out)
 
 			os.Exit(0)
@@ -158,7 +158,7 @@ func main() {
 		if *dec == true {
 			nonce, msg := msg[:aead.NonceSize()], msg[aead.NonceSize():]
 
-			out, err := aead.Open(nil, nonce, msg, nil)
+			out, err := aead.Open(nil, nonce, msg, []byte(*info))
 			if err != nil {
 				log.Fatal(err)
 			}
