@@ -25,6 +25,7 @@ var (
 	cph    = flag.String("c", "aes", "Cipher: AES, RC6, Twofish or Serpent.")
 	dec    = flag.Bool("d", false, "Decrypt instead Encrypt.")
 	file   = flag.String("f", "", "Target file. ('-' for STDIN)")
+	info   = flag.String("a", "", "Additional authenticated data.")
 	iter   = flag.Int("i", 1024, "Iterations. (for PBKDF2)")
 	key    = flag.String("k", "", "Symmetric key to Encrypt/Decrypt.")
 	length = flag.Int("b", 256, "Key length: 128, 192 or 256.")
@@ -143,6 +144,10 @@ func main() {
 
 		if *dec == false {
 			nonce := make([]byte, aead.NonceSize(), aead.NonceSize()+len(msg)+aead.Overhead())
+
+			if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+				log.Fatal(err)
+			}
 
 			out := aead.Seal(nonce, nonce, msg, nil)
 			fmt.Printf("%s", out)
