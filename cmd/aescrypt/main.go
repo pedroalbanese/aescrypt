@@ -23,7 +23,7 @@ import (
 
 var (
 	cph    = flag.String("c", "aes", "Cipher: AES, RC6, Twofish or Serpent.")
-	dec    = flag.Bool("d", false, "Decrypt instead Encrypt.")
+	dec    = flag.Bool("d", false, "Decrypt instead of Encrypt.")
 	file   = flag.String("f", "", "Target file. ('-' for STDIN)")
 	info   = flag.String("a", "", "Additional authenticated data.")
 	iter   = flag.Int("i", 1024, "Iterations. (for PBKDF2)")
