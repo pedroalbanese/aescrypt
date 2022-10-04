@@ -16,7 +16,7 @@ aescrypt [-d] [-b N] -p "pass" [-i N] [-s "salt"] -f &lt;file.ext&gt;
        Key length: 128, 192 or 256. (default 256)
  -c string
        Cipher: AES, RC6, Twofish or Serpent. (default "aes")
- -d    Decrypt instead Encrypt.
+ -d    Decrypt instead of Encrypt.
  -f string
        Target file. ('-' for STDIN)
  -i int
